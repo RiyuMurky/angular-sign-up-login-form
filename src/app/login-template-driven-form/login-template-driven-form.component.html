@@ -1,12 +1,12 @@
 <div class="form">
 
   <ul class="tab-group" #tabGroup>
-    <li class="tab active"><a href="#signup" (click)="switchTab($event)">Sign Up</a></li>
-    <li class="tab"><a href="#login" (click)="switchTab($event)">Log In</a></li>
+    <li class="tab" [ngClass]="{active:currentTabState === state.signup}"><a href="{{state.signup}}" (click)="switchTab($event)">Sign Up</a></li>
+    <li class="tab" [ngClass]="{active:currentTabState === state.login}"><a href="{{state.login}}" (click)="switchTab($event)">Log In</a></li>
   </ul>
 
   <div class="tab-content">
-    <div id="signup">
+    <div id="signup" *ngIf="currentTabState === state.signup">
       <h1>Sign Up for Free</h1>
       <!-- action="/" method="post" -->
       <form #signupForm="ngForm" (ngSubmit)="submitForm(signupForm.value)">
@@ -45,7 +45,7 @@
       </form>
 
     </div>
-    <div id="login">
+    <div id="login" *ngIf="currentTabState === state.login">
       <h1>Welcome Back!</h1>
       <!-- action="/" method="post" -->
       <form #loginForm="ngForm" (ngSubmit)="submitForm(loginForm.value)">

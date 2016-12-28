@@ -11,30 +11,33 @@ export class LoginTemplateDrivenFormComponent implements OnInit {
 
   public submitForm(formData:any):void{
     console.log(formData);
-    console.log(this);
   }
 
-  @ViewChild('tabGroup') public tabGroup:ElementRef;
-  private tabEvent;
+  readonly state:{readonly login:string, readonly signup:string} = {
+    login:"#login",
+    signup:"#signup"
+  };
 
-  public switchTab(event:Event):boolean{
-    console.log(event);
-    event.target;
+  public currentTabState:string;
 
-    console.log(this.tabGroup);
-
-    return false;
+  public switchTab(event:Event):void{
+    event.preventDefault();
+    let hash:string = (event.target as HTMLAnchorElement).hash;
+    for(let e in this.state){
+      if(this.state[e] === hash){
+        this.currentTabState = hash;
+        break;
+      }
+    }
   }
 
-  public constructor() { }
+  public constructor() {
+    this.currentTabState = this.state.signup;
+  }
 
   ngOnInit() {
-    this.tabEvent = Observable.fromEvent(this.tabGroup.nativeElement, 'click');
-
-    this.tabEvent.subscribe((event:Event) => {
-       console.log(event.target);
-       console.log("tabEvent");
-    });
+    // this.tabEvent = Observable.fromEvent(this.tabGroup.nativeElement, 'click');
+    // this.tabEvent.subscribe((event:Event) => { });
   }
 
 }
