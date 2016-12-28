@@ -1,8 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
+
+
+export interface CustomDataForm {
+  firstname?:string;
+  lastname?:string;
+  email:string;
+  password:string;
+};
 
 @Component({
   selector: 'app-login-reactive-form',
@@ -10,12 +19,17 @@ import 'rxjs/add/operator/debounce';
   styleUrls: ['./login-reactive-form.component.css']
 })
 export class LoginReactiveFormComponent implements OnInit {
+  public signupForm:FormGroup;
+  public loginForm:FormGroup;
+
   @ViewChild('tabGroup') public tabGroup:ElementRef;
   private tabObservable:Observable<Event>;
 
-  public submitForm(formData:any):void{
-    console.log(formData);
+
+  public submitForm({ value, valid }: { value: CustomDataForm, valid: boolean }):void{
+      console.log(value, valid);
   }
+
 
   readonly state:{readonly login:string, readonly signup:string} = {
     login:"#login",
@@ -32,7 +46,7 @@ export class LoginReactiveFormComponent implements OnInit {
       }
     }
   }
-
+  // constructor(private _formBuilder: FormBuilder) {}
   constructor() {
     this.currentTabState = this.state.signup;
   }
@@ -43,6 +57,24 @@ export class LoginReactiveFormComponent implements OnInit {
       event.preventDefault();
       this.setCurrentState((event.target as HTMLAnchorElement).hash);
     });
+
+    this.signupForm = new FormGroup({
+      firstname: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      lastname: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      email: new FormControl('', Validators.required),
+      password: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    });
+
+    this.loginForm = new FormGroup({
+      email: new FormControl('', Validators.required),
+      password: new FormControl('', [Validators.required, Validators.compose([Validators.minLength(10), Validators.maxLength(20)])]),
+    });
+
+    // TODO: ?
+    this.signupForm.controls["firstname"].valueChanges.subscribe((value:string) => {
+      console.log(value);
+    });
+
   }
 
 }
