@@ -5,14 +5,6 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 
-
-export interface CustomDataForm {
-  firstname?:string;
-  lastname?:string;
-  email:string;
-  password:string;
-};
-
 @Component({
   selector: 'app-login-reactive-form',
   templateUrl: './login-reactive-form.component.html',
@@ -25,13 +17,11 @@ export class LoginReactiveFormComponent implements OnInit {
   @ViewChild('tabGroup') public tabGroup:ElementRef;
   private tabObservable:Observable<Event>;
 
-
   public submitForm({ value, valid }: { value: CustomDataForm, valid: boolean }):void{
       console.log(value, valid);
   }
 
-
-  readonly state:{readonly login:string, readonly signup:string} = {
+  readonly state:StateTabs = {
     login:"#login",
     signup:"#signup"
   };
@@ -52,6 +42,7 @@ export class LoginReactiveFormComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.tabObservable = Observable.fromEvent<Event>(this.tabGroup.nativeElement, 'click');
     this.tabObservable.subscribe((event:Event) => {
       event.preventDefault();
@@ -70,7 +61,6 @@ export class LoginReactiveFormComponent implements OnInit {
       password: new FormControl('', [Validators.required, Validators.compose([Validators.minLength(10), Validators.maxLength(20)])]),
     });
 
-    // TODO: ?
     this.signupForm.controls["firstname"].valueChanges.subscribe((value:string) => {
       console.log(value);
     });
